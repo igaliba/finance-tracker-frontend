@@ -1,0 +1,16 @@
+<div style="background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #ddd;">
+  <h3>Ajouter une opération</h3>
+  <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()">
+    <input type="text" formControlName="description" placeholder="Description">
+    <input type="number" formControlName="amount" placeholder="Montant">
+    <select formControlName="type">
+      <option value="EXPENSE">Dépense</option>
+      <option value="INCOME">Revenu</option>
+    </select>
+    <select formControlName="category">
+      <option [ngValue]="null">Catégorie...</option>
+      <option *ngFor="let cat of categories" [ngValue]="cat">{{cat.name}}</option>
+    </select>
+    <button type="submit" [disabled]="transactionForm.invalid">Ajouter</button>
+  </form>
+</div>

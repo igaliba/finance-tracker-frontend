@@ -1,0 +1,28 @@
+<div style="margin-top: 20px;">
+  <h3>Historique des opérations</h3>
+  <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+    <thead style="background-color: #f4f4f4;">
+      <tr>
+        <th>Description</th>
+        <th>Montant</th>
+        <th>Type</th>
+        <th>Catégorie</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let t of transactions">
+        <td>{{ t.description }}</td>
+        <td [style.color]="t.type === 'EXPENSE' ? 'red' : 'green'">
+          {{ t.amount }} €
+        </td>
+        <td>{{ t.type }}</td>
+        <td>{{ t.category?.name }}</td>
+      </tr>
+      <tr *ngIf="transactions.length === 0">
+        <td colspan="4" style="text-align: center; padding: 20px; color: gray;">
+          Aucune transaction trouvée. Vérifie que ton Backend Spring Boot est lancé sur le port 8080 !
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
