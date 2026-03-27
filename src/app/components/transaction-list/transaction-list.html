@@ -1,28 +1,65 @@
-<div style="margin-top: 20px;">
-  <h3>Historique des opérations</h3>
-  <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
-    <thead style="background-color: #f4f4f4;">
-      <tr>
-        <th>Description</th>
-        <th>Montant</th>
-        <th>Type</th>
-        <th>Catégorie</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let t of transactions">
-        <td>{{ t.description }}</td>
-        <td [style.color]="t.type === 'EXPENSE' ? 'red' : 'green'">
-          {{ t.amount }} €
-        </td>
-        <td>{{ t.type }}</td>
-        <td>{{ t.category?.name }}</td>
-      </tr>
-      <tr *ngIf="transactions.length === 0">
-        <td colspan="4" style="text-align: center; padding: 20px; color: gray;">
-          Aucune transaction trouvée. Vérifie que ton Backend Spring Boot est lancé sur le port 8080 !
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div class="transaction-container" style="margin-top: 20px; font-family: sans-serif;">
+  
+  <h2>Historique des opérations</h2>
+
+  <div class="filters" style="margin-bottom: 20px; display: flex; gap: 10px; background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #ddd;">
+    <div style="flex: 2;">
+      <label style="display: block; font-size: 0.8em; color: #666; margin-bottom: 5px;">Rechercher</label>
+      <input type="text" [(ngModel)]="searchTerm" (input)="applyFilters()" 
+             placeholder="Ex: Carrefour, Loyer..." 
+             style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+    </div>
+    
+    <div style="flex: 1;">
+      <label style="display: block; font-size: 0.8em; color: #666; margin-bottom: 5px;">Catégorie</label>
+      <select [(ngModel)]="selectedCategory" (change)="applyFilters()" 
+              style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 4px; background: white;">
+        <option value="">Toutes</option>
+        <option *ngFor="let c of categories" [value]="c.name">{{c.name}}</option>
+      </select>
+    </div>
+  </div>
+
+  <div style="overflow-x: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 8px;">
+    <table style="width: 100%; border-collapse: collapse; text-align: left; background: white;">
+      <thead style="background-color: #333; color: white;">
+        <tr>
+          <th style="padding: 15px;">Date</th>
+          <th style="padding: 15px;">Description</th>
+          <th style="padding: 15px;">Catégorie</th>
+          <th style="padding: 15px;">Montant</th>
+          <th style="padding: 15px; text-align: center;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let t of filteredTransactions" style="border-bottom: 1px solid #eee;">
+          <td style="padding: 12px;">{{ t.date | date:'dd/MM/yyyy' }}</td>
+          <td style="padding: 12px;">{{ t.description }}</td>
+          <td style="padding: 12px;">
+            <span style="background: #f0f0f0; padding: 4px 10px; border-radius: 15px; font-size: 0.85em; color: #444;">
+              {{ t.category?.name || 'Général' }}
+            </span>
+          </td>
+          
+          <td style="padding: 12px; font-weight: bold; font-size: 1.1em;" 
+              [style.color]="t.type === 'EXPENSE' ? '#e74c3c' : '#27ae60'">
+            {{ t.type === 'EXPENSE' ? '-' : '+' }} {{ t.amount }} €
+          </td>
+
+          <td style="padding: 12px; text-align: center;">
+            <button (click)="onDelete(t.id)" 
+                    style="background: #ff4d4d; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 0.85em; transition: 0.3s;">
+              Supprimer
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngIf="filteredTransactions.length === 0">
+          <td colspan="5" style="text-align: center; padding: 40px; color: #999; font-style: italic;">
+            Aucune opération ne correspond à vos filtres.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

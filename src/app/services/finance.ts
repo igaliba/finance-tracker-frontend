@@ -24,7 +24,9 @@ export class FinanceService {
   addTransaction(transaction: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/transactions`, transaction);
   }
-
+deleteTransaction(id: number): Observable<any> {
+  return this.http.delete(`${this.apiUrl}/transactions/${id}`);
+}
   getSummary(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/transactions/dashboard/summary`);
   }
